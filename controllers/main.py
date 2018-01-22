@@ -3,10 +3,17 @@
 from odoo import http, _
 import odoo
 from odoo.http import route
-from odoo.http import request 
+from odoo.http import request
+import werkzeug.utils
+import werkzeug.wrappers
 from odoo.addons.web.controllers.main import Home, ensure_db
 
 class ActivateDebugMode(Home):
+
+    @http.route('/', type='http', auth="none")
+    def index(self, s_action=None, db=None, **kw):
+        return http.local_redirect('/web/login', query=request.params, keep_hash=True)
+
 
     @http.route('/web/login', type='http', auth="none")
     def web_login(self, redirect=None, **kw):
@@ -32,3 +39,5 @@ class ActivateDebugMode(Home):
             request.uid = old_uid
             values['error'] = _("Wrong login/password")
         return request.render('web.login', values)
+
+
